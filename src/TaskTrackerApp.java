@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -87,5 +90,34 @@ public class TaskTrackerApp {
         return groups.stream()
                 .filter(group -> group.getGroupName().equals(groupName))
                 .findFirst().orElse(null);
+
+     private static void addTeacher(Scanner scanner) throws SQLException {
+        System.out.println("Enter teacher name:");
+        String teacherName = scanner.next();
+        
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO teachers (name) VALUES (?)")) {
+            statement.setString(1, teacherName);
+            statement.executeUpdate();
+        }
+
+        System.out.println("Teacher added.");
+    }
+
+    private static void addCourse(Scanner scanner) throws SQLException {
+        System.out.println("Enter course name:");
+        String courseName = scanner.next();
+
+        System.out.println("Enter teacher ID:");
+        int teacherId = scanner.nextInt();
+
+        
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO courses (name, teacher_id) VALUES (?, ?)")) {
+            statement.setString(1, courseName);
+            statement.setInt(2, teacherId);
+            statement.executeUpdate();
+        }
+
+        System.out.println("Course added.");  
+    
     }
 }
